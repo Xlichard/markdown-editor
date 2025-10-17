@@ -1,0 +1,850 @@
+.markdown-editor {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #e9ecef;
+  min-height: 56px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 100;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  color: #495057;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  border-color: #adb5bd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toolbar-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.toolbar-btn.active {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: #ffffff;
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.toolbar-btn.active:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  border-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.file-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.theme-dark .file-name {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+.modified-indicator {
+  color: #dc3545;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.save-status {
+  margin-left: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.theme-dark .save-status {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #404040;
+}
+
+.save-status.saved {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.save-status.modified {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.save-status.saving {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 8px 0 0 0;
+  box-shadow: inset 0 0 0 1px #e9ecef;
+  margin: 8px 8px 8px 0;
+}
+
+.theme-dark .editor-container {
+  background: #1a1a1a;
+  box-shadow: inset 0 0 0 1px #404040;
+}
+
+/* 自定义MDEditor样式 */
+.w-md-editor {
+  height: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.w-md-editor-toolbar {
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #e9ecef !important;
+  padding: 8px 12px !important;
+}
+
+.w-md-editor-toolbar ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.w-md-editor-toolbar li {
+  margin: 0 4px !important;
+}
+
+.w-md-editor-toolbar li button {
+  padding: 6px 8px !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  background: #e9ecef !important;
+}
+
+.w-md-editor-text-container {
+  background: #ffffff !important;
+}
+
+.w-md-editor-text {
+  background: #ffffff !important;
+  color: #212529 !important;
+  font-family: '"Fira Code", "JetBrains Mono", "Consolas", monospace' !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.w-md-editor-text:focus {
+  outline: none !important;
+}
+
+.w-md-editor-preview {
+  background: #ffffff !important;
+  padding: 20px !important;
+  border-left: 1px solid #e9ecef !important;
+}
+
+.w-md-editor-preview .wmde-markdown {
+  color: #212529 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.w-md-editor-preview .wmde-markdown h1,
+.w-md-editor-preview .wmde-markdown h2,
+.w-md-editor-preview .wmde-markdown h3,
+.w-md-editor-preview .wmde-markdown h4,
+.w-md-editor-preview .wmde-markdown h5,
+.w-md-editor-preview .wmde-markdown h6 {
+  color: #212529 !important;
+  font-weight: 600 !important;
+  margin-top: 24px !important;
+  margin-bottom: 16px !important;
+}
+
+.w-md-editor-preview .wmde-markdown h1 {
+  font-size: 28px !important;
+  border-bottom: 2px solid #e9ecef !important;
+  padding-bottom: 8px !important;
+}
+
+.w-md-editor-preview .wmde-markdown h2 {
+  font-size: 24px !important;
+  border-bottom: 1px solid #e9ecef !important;
+  padding-bottom: 6px !important;
+}
+
+.w-md-editor-preview .wmde-markdown h3 {
+  font-size: 20px !important;
+}
+
+.w-md-editor-preview .wmde-markdown p {
+  margin-bottom: 16px !important;
+}
+
+.w-md-editor-preview .wmde-markdown code {
+  background: #f8f9fa !important;
+  color: #e83e8c !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+}
+
+.w-md-editor-preview .wmde-markdown pre {
+  background: #f8f9fa !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+  overflow-x: auto !important;
+}
+
+.w-md-editor-preview .wmde-markdown pre code {
+  background: transparent !important;
+  color: #212529 !important;
+  padding: 0 !important;
+}
+
+.w-md-editor-preview .wmde-markdown blockquote {
+  border-left: 4px solid #007bff !important;
+  background: #f8f9fa !important;
+  padding: 12px 16px !important;
+  margin: 16px 0 !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.w-md-editor-preview .wmde-markdown table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 16px 0 !important;
+}
+
+.w-md-editor-preview .wmde-markdown table th,
+.w-md-editor-preview .wmde-markdown table td {
+  border: 1px solid #dee2e6 !important;
+  padding: 8px 12px !important;
+  text-align: left !important;
+}
+
+.w-md-editor-preview .wmde-markdown table th {
+  background: #f8f9fa !important;
+  font-weight: 600 !important;
+}
+
+/* 代码高亮样式 */
+.w-md-editor-preview .hljs {
+  background: #f8f9fa !important;
+  color: #212529 !important;
+  border-radius: 4px !important;
+}
+
+.w-md-editor-preview .hljs-comment,
+.w-md-editor-preview .hljs-quote {
+  color: #6c757d !important;
+  font-style: italic !important;
+}
+
+.w-md-editor-preview .hljs-keyword,
+.w-md-editor-preview .hljs-selector-tag,
+.w-md-editor-preview .hljs-subst {
+  color: #d63384 !important;
+  font-weight: bold !important;
+}
+
+.w-md-editor-preview .hljs-number,
+.w-md-editor-preview .hljs-literal,
+.w-md-editor-preview .hljs-variable,
+.w-md-editor-preview .hljs-template-variable,
+.w-md-editor-preview .hljs-tag .hljs-attr {
+  color: #fd7e14 !important;
+}
+
+.w-md-editor-preview .hljs-string,
+.w-md-editor-preview .hljs-doctag {
+  color: #198754 !important;
+}
+
+.w-md-editor-preview .hljs-title,
+.w-md-editor-preview .hljs-section,
+.w-md-editor-preview .hljs-selector-id {
+  color: #0d6efd !important;
+  font-weight: bold !important;
+}
+
+.w-md-editor-preview .hljs-type,
+.w-md-editor-preview .hljs-class .hljs-title {
+  color: #6f42c1 !important;
+  font-weight: bold !important;
+}
+
+.w-md-editor-preview .hljs-tag,
+.w-md-editor-preview .hljs-name,
+.w-md-editor-preview .hljs-attribute {
+  color: #dc3545 !important;
+  font-weight: normal !important;
+}
+
+.w-md-editor-preview .hljs-regexp,
+.w-md-editor-preview .hljs-link {
+  color: #20c997 !important;
+}
+
+.w-md-editor-preview .hljs-symbol,
+.w-md-editor-preview .hljs-bullet {
+  color: #fd7e14 !important;
+}
+
+.w-md-editor-preview .hljs-built_in,
+.w-md-editor-preview .hljs-builtin-name {
+  color: #0d6efd !important;
+}
+
+.w-md-editor-preview .hljs-meta {
+  color: #6c757d !important;
+}
+
+.w-md-editor-preview .hljs-deletion {
+  background: #f8d7da !important;
+}
+
+.w-md-editor-preview .hljs-addition {
+  background: #d1e7dd !important;
+}
+
+.w-md-editor-preview .hljs-emphasis {
+  font-style: italic !important;
+}
+
+.w-md-editor-preview .hljs-strong {
+  font-weight: bold !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 6px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .toolbar-left,
+  .toolbar-right {
+    gap: 4px;
+  }
+  
+  .toolbar-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .file-name {
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+  
+  .w-md-editor-preview {
+    padding: 12px !important;
+  }
+}
+
+/* 主内容区域 */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  background: #ffffff;
+  position: relative;
+}
+
+/* 文件树侧边栏 */
+.file-tree-sidebar {
+  width: 300px;
+  min-width: 250px;
+  max-width: 400px;
+  background: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  resize: horizontal;
+  overflow: hidden;
+}
+
+.file-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.file-tree-header .close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.file-tree-header .close-btn:hover {
+  background: #dee2e6;
+  color: #495057;
+}
+
+/* 工具栏分隔线 */
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background: #dee2e6;
+  margin: 0 8px;
+  align-self: center;
+}
+
+/* 暗夜模式样式 */
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --border-color: #404040;
+  --hover-bg: #2a2a2a;
+  --toolbar-bg: #1a1a1a;
+  --sidebar-bg: #1a1a1a;
+  --button-bg: #2a2a2a;
+  --button-hover-bg: #3a3a3a;
+  --button-text: #e0e0e0;
+  --button-active-bg: #007bff;
+}
+
+.theme-dark {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-dark .markdown-editor {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-dark .toolbar {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.theme-dark .toolbar-btn {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-color: var(--border-color);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .toolbar-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  border-color: #555;
+  color: var(--button-text);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .toolbar-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .toolbar-btn.active {
+  background-color: var(--button-active-bg);
+  color: #ffffff;
+  border-color: var(--button-active-bg);
+  font-weight: 700;
+}
+
+.theme-dark .toolbar-btn.active:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.theme-dark .toolbar-btn:disabled {
+  color: #888;
+  background-color: #333;
+  border-color: #444;
+}
+
+.theme-dark .file-tree-sidebar {
+  background-color: var(--sidebar-bg);
+  border-right-color: var(--border-color);
+}
+
+.theme-dark .file-tree-header {
+  background-color: var(--hover-bg);
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.theme-dark .file-tree-header .close-btn {
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.theme-dark .file-tree-header .close-btn:hover {
+  background-color: var(--border-color);
+  color: #ffffff;
+}
+
+.theme-dark .file-tree {
+  background-color: var(--sidebar-bg);
+}
+
+.theme-dark .file-tree-item {
+  color: var(--text-color);
+}
+
+.theme-dark .file-tree-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.theme-dark .file-tree-empty {
+  color: #888;
+}
+
+.theme-dark .file-name {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+  font-weight: 600;
+}
+
+.theme-dark .save-status {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.theme-dark .save-status.saved {
+  color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.theme-dark .save-status.modified {
+  color: #ff9800;
+  background-color: rgba(255, 152, 0, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.theme-dark .save-status.saving {
+  color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* 暗夜模式下的MDEditor样式 */
+.theme-dark .w-md-editor {
+  background-color: var(--bg-color) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-bar {
+  background-color: var(--bg-color) !important;
+  border: none !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-bar .w-md-editor-bar-item {
+  background-color: var(--bg-color) !important;
+  border: none !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-text-container {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-text {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-preview {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 额外的边框移除样式 */
+.theme-dark .w-md-editor * {
+  border-color: transparent !important;
+}
+
+.theme-dark .w-md-editor .w-md-editor-text-container,
+.theme-dark .w-md-editor .w-md-editor-text,
+.theme-dark .w-md-editor .w-md-editor-preview,
+.theme-dark .w-md-editor .w-md-editor-bar {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 确保编辑器容器没有边框和边距 */
+.theme-dark .markdown-editor {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 确保编辑器内容区域完全填充 */
+.theme-dark .markdown-editor .editor-container {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.theme-dark .w-md-editor-toolbar {
+  background-color: var(--toolbar-bg) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-toolbar ul {
+  border: none !important;
+}
+
+.theme-dark .w-md-editor-toolbar li {
+  border: none !important;
+}
+
+.theme-dark .w-md-editor-toolbar li button {
+  border: none !important;
+  background-color: transparent !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-toolbar li button:hover {
+  background-color: var(--button-hover-bg) !important;
+  border: none !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-text-container {
+  background-color: var(--bg-color) !important;
+}
+
+.theme-dark .w-md-editor-text {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-preview {
+  background-color: var(--bg-color) !important;
+  border-left-color: var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown h1,
+.theme-dark .w-md-editor-preview .wmde-markdown h2,
+.theme-dark .w-md-editor-preview .wmde-markdown h3,
+.theme-dark .w-md-editor-preview .wmde-markdown h4,
+.theme-dark .w-md-editor-preview .wmde-markdown h5,
+.theme-dark .w-md-editor-preview .wmde-markdown h6 {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown h1 {
+  border-bottom-color: var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown h2 {
+  border-bottom-color: var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown code {
+  background-color: var(--button-bg) !important;
+  color: #ff6b6b !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown pre {
+  background-color: var(--button-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown pre code {
+  background-color: transparent !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown blockquote {
+  border-left-color: #007bff !important;
+  background-color: var(--button-bg) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown table th,
+.theme-dark .w-md-editor-preview .wmde-markdown table td {
+  border-color: var(--border-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .wmde-markdown table th {
+  background-color: var(--button-bg) !important;
+}
+
+/* 暗夜模式下的代码高亮 */
+.theme-dark .w-md-editor-preview .hljs {
+  background-color: var(--button-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-comment,
+.theme-dark .w-md-editor-preview .hljs-quote {
+  color: #888 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-keyword,
+.theme-dark .w-md-editor-preview .hljs-selector-tag,
+.theme-dark .w-md-editor-preview .hljs-subst {
+  color: #ff6b6b !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-number,
+.theme-dark .w-md-editor-preview .hljs-literal,
+.theme-dark .w-md-editor-preview .hljs-variable,
+.theme-dark .w-md-editor-preview .hljs-template-variable,
+.theme-dark .w-md-editor-preview .hljs-tag .hljs-attr {
+  color: #ffa726 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-string,
+.theme-dark .w-md-editor-preview .hljs-doctag {
+  color: #66bb6a !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-title,
+.theme-dark .w-md-editor-preview .hljs-section,
+.theme-dark .w-md-editor-preview .hljs-selector-id {
+  color: #42a5f5 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-type,
+.theme-dark .w-md-editor-preview .hljs-class .hljs-title {
+  color: #ab47bc !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-tag,
+.theme-dark .w-md-editor-preview .hljs-name,
+.theme-dark .w-md-editor-preview .hljs-attribute {
+  color: #ef5350 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-regexp,
+.theme-dark .w-md-editor-preview .hljs-link {
+  color: #26c6da !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-symbol,
+.theme-dark .w-md-editor-preview .hljs-bullet {
+  color: #ffa726 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-built_in,
+.theme-dark .w-md-editor-preview .hljs-builtin-name {
+  color: #42a5f5 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-meta {
+  color: #888 !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-deletion {
+  background-color: rgba(239, 83, 80, 0.2) !important;
+}
+
+.theme-dark .w-md-editor-preview .hljs-addition {
+  background-color: rgba(76, 175, 80, 0.2) !important;
+}
